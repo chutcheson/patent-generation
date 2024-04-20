@@ -9,7 +9,10 @@ def format_abstract_prompt(invention_disclosure, prior_art):
     {prior_art}
 
     Write an abstract for this patent application.
+
     Do not return any text other than the abstract.
+
+    Return your results with a markdown header "## Abstract".
     """
 
 def format_plan_specification_prompt(abstract, invention_disclosure, prior_art):
@@ -49,6 +52,8 @@ def format_specification_prompt(section, patent, invention_disclosure, prior_art
     Write the section of the patent specification.
 
     Do not return any text other than the section of the patent specification.
+
+    Return your results with a markdown header (e.g. "## Background").
     """
 
 def format_claims_prompt(patent, invention_disclosure, prior_art):
@@ -70,4 +75,6 @@ def format_claims_prompt(patent, invention_disclosure, prior_art):
     Write the claims section of the patent specification.
 
     Do not return any text other than the claims.
+
+    Return your results with a markdown header "## Claims".
     """
