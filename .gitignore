@@ -71,6 +71,9 @@ instance/
 # Sphinx documentation
 docs/_build/
 
+src/gcloud/
+gloud/
+
 # PyBuilder
 target/
 
