@@ -1,4 +1,14 @@
+import google.generativeai as genai
+import os
+
 import fitz
+
+def generator(prompt):
+
+    genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
+    model = genai.GenerativeModel('gemini-1.5-pro-latest')
+    response = model.generate_content(prompt)
+    return response.text
 
 def convert_pdf_to_text(pdf_path):
     # Open the provided PDF file
