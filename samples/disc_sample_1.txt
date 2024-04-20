@@ -1,0 +1,43 @@
+Patent Disclosure: Real-time Image Enhancement during Pixel Format Conversion
+Inventors: [Your Name(s)]
+Description:
+This invention relates to the field of image processing, specifically to a method and system for performing real-time image enhancement during the conversion of images between different pixel formats.
+Background:
+USB cameras often capture images in various pixel formats, such as YUYV, Bayer, or MJPEG. These formats typically require conversion to a more common format, such as RGB, for further processing or display. While existing methods focus solely on the conversion between formats, they do not address the potential for simultaneous image enhancement.
+Invention:
+The invention proposes a method and system for integrating image enhancement techniques into the pixel format conversion process. This allows for real-time improvement of image quality without introducing additional processing steps.
+Technical Implementation:
+Input Image: An image is received in a source pixel format (e.g., YUYV).
+Conversion with Enhancement:
+The image is converted to the target pixel format (e.g., RGB) using established conversion algorithms.
+During conversion, image enhancement algorithms are applied to improve specific aspects of the image. Examples of enhancement techniques include:
+Noise Reduction: Filtering out noise artifacts to improve clarity.
+Color Correction: Adjusting color balance and saturation for more accurate representation.
+Low-Light Enhancement: Increasing brightness and contrast in dimly lit scenes.
+Sharpening: Enhancing edges and details for improved visual perception.
+The specific enhancement techniques applied can be selected based on the source format, target format, and desired image characteristics.
+Output Image: The enhanced image is output in the target pixel format.
+Advantages:
+Real-time Enhancement: Image quality is improved without adding latency or requiring separate processing steps.
+Efficiency: The enhancement is integrated into the conversion process, optimizing computational resources.
+Flexibility: Different enhancement techniques can be applied based on specific needs.
+Improved Image Quality: Enhanced images are more suitable for subsequent processing, analysis, or display.
+Potential Applications:
+Robotics: Enhance images from onboard cameras for improved navigation, object recognition, and manipulation.
+Computer Vision: Preprocess images for tasks like object detection, tracking, and classification.
+Medical Imaging: Improve the quality of images for diagnosis and analysis.
+Consumer Electronics: Enhance images and videos captured by smartphones, webcams, or other devices.
+Patent Claims:
+A method for enhancing an image during pixel format conversion, comprising:
+Receiving an image in a source pixel format;
+Converting the image to a target pixel format; and
+Applying at least one image enhancement technique to the image during the conversion process.
+A system for enhancing an image during pixel format conversion, comprising:
+Means for receiving an image in a source pixel format;
+Means for converting the image to a target pixel format; and
+Means for applying at least one image enhancement technique to the image during the conversion process.
+Additional Notes:
+The invention can be implemented in software, hardware, or a combination of both.
+The enhancement techniques can be adapted to different image sensors and camera types.
+The system can be integrated into various image processing pipelines.
+Disclaimer: This patent disclosure is for illustrative purposes only and should not be considered as legal advice or a substitute for consulting with a qualified patent attorney.
