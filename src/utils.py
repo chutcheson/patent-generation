@@ -13,6 +13,7 @@ def generator(prompt):
     # Generate content with an extended timeout
     try:
         response = model.generate_content(prompt)
+        print("done")
         return response.text
     except google.api_core.exceptions.DeadlineExceeded as e:
         print(f"Request timed out: {e}")
