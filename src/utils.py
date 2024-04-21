@@ -19,6 +19,8 @@ def generator(prompt):
         print(f"Request timed out: {e}")
         return None  # or handle the exception as appropriate for your application
 
+def values_to_markdown(d):
+    return "".join(value for value in d.values())
 
 def convert_pdf_to_text(input_pdf_path, output_pdf_path):
     # Open the provided PDF file
