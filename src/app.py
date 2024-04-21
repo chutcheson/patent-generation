@@ -1,5 +1,6 @@
 import streamlit as st
 import json
+from embeddings import query
 
 from writer import generate_patent
 from utils import values_to_markdown
@@ -13,7 +14,9 @@ def github_to_disclosure(url):
 
 def disclosure_to_prior_art(disclosure):
     # Dummy function implementation
-    return ["Patent 123", "Patent 456"]
+    prior_art_patent_text = query(disclosure)
+    return prior_art_patent_text
+    # return ["Patent 123", "Patent 456"]
 
 def disclosure_and_prior_art_to_patent(disclosure, prior_art):
     # Dummy function implementation

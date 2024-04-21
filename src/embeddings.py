@@ -31,7 +31,6 @@ model = GPT2Model.from_pretrained('gpt2')
 # Google Cloud Storage setup
 client = storage.Client(project=project_name)  # Replace 'your-project-name' with your actual project name
 bucket = client.get_bucket('patent_bucket_123')  # Replace 'your-bucket-name' with your actual bucket name
-print(bucket.location)
 
 # Function to extract text from a single PDF
 def extract_text_from_pdf(blob):
@@ -49,31 +48,62 @@ def generate_embeddings(text):
 # Main processing loopu
 embedding_data = []  # List to store embedding data
 
-for blob in bucket.list_blobs(prefix='patents_json/'):  # Assuming PDFs are in a folder named 'pdfs'
-    if blob.name.endswith('.pdf'):
-        blob.download_to_filename('temp.pdf')
-        text = extract_text_from_pdf('temp.pdf')
+# for blob in bucket.list_blobs(prefix='patents_json/'):  # Assuming PDFs are in a folder named 'pdfs'
+#     if blob.name.endswith('.pdf'):
+#         blob.download_to_filename('temp.pdf')
+#         text = extract_text_from_pdf('temp.pdf')
 
-        if text:
-            embeddings = generate_embeddings(text)
-            print(f"Embeddings for {blob.name}: {embeddings}")
-            embedding_data.append({"id": os.path.splitext(os.path.basename(blob.name))[0], "embedding": embeddings.tolist()})
-        else:
-            print(f"Empty text for {blob.name}")
+#         if text:
+#             embeddings = generate_embeddings(text)
+#             print(f"Embeddings for {blob.name}: {embeddings}")
+#             embedding_data.append({"id": os.path.splitext(os.path.basename(blob.name))[0], "embedding": embeddings.tolist()})
+#         else:
+#             print(f"Empty text for {blob.name}")
         
-        os.remove('temp.pdf')  # Clean up temp file
+#         os.remove('temp.pdf')  # Clean up temp file
 
 # Placeholder for embedding CSV file path
 embedding_csv_path = 'src/embeddings.csv'
 
 # Write embeddings to CSV file
-with open(embedding_csv_path, 'w', newline='') as csvfile:
-    fieldnames = ['id', 'embedding']
-    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-    writer.writeheader()
-    for data in embedding_data:
-        writer.writerow(data)
+# with open(embedding_csv_path, 'w', newline='') as csvfile:
+#     fieldnames = ['id', 'embedding']
+#     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+#     writer.writeheader()
+#     for data in embedding_data:
+#         writer.writerow(data)
 
 # Upload CSV file to GCP bucket
-blob = bucket.blob('batch_root/embeddings.csv')
-blob.upload_from_filename(embedding_csv_path)
+# blob = bucket.blob('batch_root/embeddings.csv')
+# blob.upload_from_filename(embedding_csv_path)
+
+def query(text):
+    # Placeholder for query logic
+    embeddings = generate_embeddings(text)
+    print(f"Embeddings for query text: {embeddings}")
+
+    # poc return pdf text
+    
+    return fetch_patent_details_text('US9979873', bucket)
+    # return "text sample patent"
+
+
+def fetch_patent_details_text(patent_id, bucket):
+    # Ensure the 'temp' directory exists
+    os.makedirs('temp', exist_ok=True)  # This creates the directory if it does not exist and does nothing if it does
+
+    blob_name = f'patents_json/{patent_id}.pdf'
+    blob = bucket.blob(blob_name)
+    file_path = f'temp/{patent_id}.pdf'
+
+    # Download the PDF file from GCS to the local 'temp' directory
+    blob.download_to_filename(file_path)
+
+    # Extract text from the PDF file
+    text = extract_text_from_pdf(file_path)
+
+    # Remove the temporary file to clean up
+    os.remove(file_path)
+
+    return text
+
