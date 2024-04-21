@@ -1,10 +1,11 @@
 import os
-from google.cloud import storage
+from google.cloud import storage, aiplatform
 import pdfplumber
 from transformers import GPT2Tokenizer, GPT2Model
 
 from dotenv import load_dotenv
-import os
+import csv
+
 
 # Load environment variables from .env file
 load_dotenv()
@@ -29,7 +30,8 @@ model = GPT2Model.from_pretrained('gpt2')
 
 # Google Cloud Storage setup
 client = storage.Client(project=project_name)  # Replace 'your-project-name' with your actual project name
-bucket = client.get_bucket('patents_json')
+bucket = client.get_bucket('patent_bucket_123')  # Replace 'your-bucket-name' with your actual bucket name
+print(bucket.location)
 
 # Function to extract text from a single PDF
 def extract_text_from_pdf(blob):
@@ -44,36 +46,34 @@ def generate_embeddings(text):
     outputs = model(**inputs)
     return outputs.last_hidden_state.mean(0)  # Taking the mean of the last hidden state
 
-# Main processing loop
+# Main processing loopu
+embedding_data = []  # List to store embedding data
+
 for blob in bucket.list_blobs(prefix='patents_json/'):  # Assuming PDFs are in a folder named 'pdfs'
     if blob.name.endswith('.pdf'):
         blob.download_to_filename('temp.pdf')
         text = extract_text_from_pdf('temp.pdf')
-        embeddings = generate_embeddings(text)
-        print(f"Embeddings for {blob.name}: {embeddings}")
+
+        if text:
+            embeddings = generate_embeddings(text)
+            print(f"Embeddings for {blob.name}: {embeddings}")
+            embedding_data.append({"id": os.path.splitext(os.path.basename(blob.name))[0], "embedding": embeddings.tolist()})
+        else:
+            print(f"Empty text for {blob.name}")
+        
         os.remove('temp.pdf')  # Clean up temp file
 
+# Placeholder for embedding CSV file path
+embedding_csv_path = 'src/embeddings.csv'
 
-# Initialize the Vertex AI client
-def create_vertex_ai_client(project: str, location: str):
-    aiplatform.init(project=project, location=location)
-    return aiplatform
+# Write embeddings to CSV file
+with open(embedding_csv_path, 'w', newline='') as csvfile:
+    fieldnames = ['id', 'embedding']
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    writer.writeheader()
+    for data in embedding_data:
+        writer.writerow(data)
 
-# Deploy the index to an endpoint
-def deploy_index_to_endpoint(client, index_id: str, endpoint_display_name: str):
-    index = client.Index(index_id)
-    
-    # You might need to specify more configurations based on your needs
-    deployed_index = index.deploy(
-        deployed_index_display_name=endpoint_display_name,
-    )
-    
-    return deployed_index
-
-
-# Create a Vertex AI client
-client = create_vertex_ai_client(project_id, location)
-
-# Deploy the index to an endpoint and get the deployed index details
-deployed_index = deploy_index_to_endpoint(client, index_id, endpoint_display_name)
-print(deployed_index)
+# Upload CSV file to GCP bucket
+blob = bucket.blob('batch_root/embeddings.csv')
+blob.upload_from_filename(embedding_csv_path)
