@@ -3,7 +3,7 @@ import os
 import google
 import google.generativeai as genai
 
-import fitz
+# import fitz
 
 def generator(prompt):
     # Configure the API key and model
@@ -37,4 +37,3 @@ def convert_pdf_to_text(input_pdf_path, output_pdf_path):
 
     # Close the PDF document
     document.close()
-
