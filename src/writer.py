@@ -4,9 +4,6 @@ import json
 from utils import generator
 from writer_prompts import format_abstract_prompt, format_plan_specification_prompt, format_specification_prompt, format_claims_prompt
 
-def patent_to_markdown(patent):
-    return "".join(value in patent.values())
-
 
 def generate_patent(invention_description, prior_art):
     patent = {}
